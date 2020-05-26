@@ -5,6 +5,7 @@ import locking
 dbDir = 'db'
 dbFile = 'course.json'
 backupDir = 'backup'
+header = 'Content-type: application/json\n\n'
 
 for dirname in [dbDir, backupDir]:
   try:
@@ -30,7 +31,7 @@ try:
       raw = json.dumps(data)
       backup = open(os.path.join(backupDir, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S-%f.json')), 'w')
       backup.write(raw)
-      db.rewind()
+      db.seek(0)
       db.truncate(0)
       db.write(raw)
 
@@ -39,5 +40,6 @@ try:
 except Exception:
   kind, value = sys.exc_info()[:2]
   raw = '%s: %s' % (kind.__name__, value)
+  header = 'Content-type: text/plain\nStatus: 400 Bad Request\n\n'
 
-sys.stdout.write('Content-type: application/json\n\n' + raw)
+sys.stdout.write(header + raw)
