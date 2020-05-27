@@ -24,9 +24,19 @@ try:
   if not readOnly:
     data = json.loads(raw)
     orig = copy.deepcopy(data)
+
+    # Simple key/value storage
     for key in ['title']:
       if key in op:
         data[key] = op[key]
+
+    # Lecture creation
+    if 'newLecture' in op:
+      if 'lectures' not in data:
+        data['lectures'] = []
+      data['lectures'].append(op['newLecture'])
+      data['lectures'].sort(key = lambda L: L.get('number'))
+
     if data != orig:
       raw = json.dumps(data)
       backup = open(os.path.join(backupDir, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S-%f.json')), 'w')
