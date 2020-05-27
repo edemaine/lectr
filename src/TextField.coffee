@@ -1,8 +1,11 @@
 import * as preact from 'preact'
 import { useState } from 'preact/hooks'
 
+lastPropValue = null
 export default TextField = (props) ->
-  [value, setValue] = useState props.value
+  [value, setValue] = useState null
+  if lastPropValue != props.value
+    setValue lastPropValue = props.value
   onInput = (e) =>
     setValue e.target.value
   onSubmit = (e) =>
