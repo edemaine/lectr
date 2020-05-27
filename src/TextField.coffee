@@ -1,8 +1,8 @@
 import * as preact from 'preact'
-import useDBState from './useDBState.coffee'
+import usePropState from './usePropState.coffee'
 
 export default TextField = (props) ->
-  [value, setValue] = useDBState props, 'value'
+  [value, setValue] = usePropState props, 'value'
   onInput = (e) =>
     setValue e.target.value
   onSubmit = (e) =>

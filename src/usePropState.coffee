@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'preact/hooks'
 
-export default useDBState = (props, key) ->
+export default usePropState = (props, key) ->
   [state, setState] = useState null
   useMemo ->
     setState props[key]

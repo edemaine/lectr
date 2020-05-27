@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import copy, datetime, json, os, sys
+import copy, datetime, json, os, sys, uuid
 import locking
 
 dbDir = 'db'
@@ -31,11 +31,18 @@ try:
         data[key] = op[key]
 
     # Lecture creation
-    if 'newLecture' in op:
-      if 'lectures' not in data:
-        data['lectures'] = []
-      data['lectures'].append(op['newLecture'])
-      data['lectures'].sort(key = lambda L: L.get('number'))
+    if 'lectures' not in data:
+      data['lectures'] = []
+    if 'lecture' in op:
+      lecture = op['lecture']
+      if '_id' not in lecture: # new lecture
+        lecture['_id'] = uuid.uuid4().hex
+        data['lectures'].append(lecture)
+      else:
+        existing = [_ for _ in data['lectures'] if _['_id'] == lecture['_id']][0]
+        for key, value in lecture.items():
+          existing[key] = value
+    data['lectures'].sort(key = lambda L: L.get('number'))
 
     if data != orig:
       raw = json.dumps(data)

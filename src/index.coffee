@@ -27,6 +27,10 @@ class App extends preact.Component
     <>
       <h1>Staff Access to {state.title ? 'your class'}</h1>
       <TextField name="title" value={state.title} title="Course title" db={@db}/>
+      <h2>Lectures</h2>
+      {for lecture in state.lectures ? []
+        <Lecture {...lecture} db={@db}/>
+      }
       <h3>Add New Lecture:</h3>
       <Lecture db={@db}/>
       <h3>Raw State:</h3>

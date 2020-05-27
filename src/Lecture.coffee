@@ -1,23 +1,22 @@
 import * as preact from 'preact'
-import { useState } from 'preact/hooks'
+import usePropState from './usePropState.coffee'
 
 export default Lecture = (props) ->
-  [number, setNumber] = useState props.number
-  [title, setTitle] = useState props.title
-  [description, setDescription] = useState props.description
-  [video, setVideo] = useState props.video
-  newLecture = not props.number?
+  [number, setNumber] = usePropState props, 'number'
+  [title, setTitle] = usePropState props, 'title'
+  [description, setDescription] = usePropState props, 'description'
+  [video, setVideo] = usePropState props, 'video'
+  newLecture = not props._id?
   onSubmit = (e) =>
     e.preventDefault()
-    props.db 'newLecture': {number, title, description, video}
+    props.db 'lecture': {_id: props._id, number, title, description, video}
   submitName =
     if newLecture
       'Create'
     else
       'Save'
   disabled =
-    not number or
-    (props.number == number and props.title == title and props.descripion == description and props.video == video)
+    (props.number == number and props.title == title and props.description == description and props.video == video)
   <form onSubmit={onSubmit}>
     <label>
       Number: &nbsp;
