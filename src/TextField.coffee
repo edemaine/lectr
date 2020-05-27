@@ -3,11 +3,6 @@ import { useState } from 'preact/hooks'
 
 export default TextField = (props) ->
   [value, setValue] = useState props.value
-  disabled =
-    if value == props.value
-      'disabled'
-    else
-      ''
   onInput = (e) =>
     setValue e.target.value
   onSubmit = (e) =>
@@ -18,8 +13,5 @@ export default TextField = (props) ->
       {props.title}: &nbsp;
       <input type="text" value={value} onInput={onInput}/>
     </label>
-    {if value == props.value
-       <input type="submit" value="Save" disabled/>
-     else
-       <input type="submit" value="Save"/>}
+    <input type="submit" value="Save" disabled={value == props.value}/>
   </form>
