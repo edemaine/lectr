@@ -30,18 +30,20 @@ try:
       if key in op:
         data[key] = op[key]
 
-    # Lecture creation
-    if 'lectures' not in data:
-      data['lectures'] = []
-    if 'lecture' in op:
-      lecture = op['lecture']
-      if '_id' not in lecture: # new lecture
-        lecture['_id'] = uuid.uuid4().hex
-        data['lectures'].append(lecture)
-      else:
-        existing = [_ for _ in data['lectures'] if _['_id'] == lecture['_id']][0]
-        for key, value in lecture.items():
-          existing[key] = value
+    # Document Types and Lectures
+    for kind in ['docType', 'lecture']:
+      plural = kind + 's'
+      if plural not in data:
+        data[plural] = []
+      if kind in op:
+        doc = op[kind]
+        if '_id' not in doc: # new
+          doc['_id'] = uuid.uuid4().hex
+          data[plural].append(doc)
+        else:
+          existing = [_ for _ in data[plural] if _['_id'] == doc['_id']][0]
+          for key, value in doc.items():
+            existing[key] = value
     data['lectures'].sort(key = lambda L: L.get('number'))
 
     if data != orig:

@@ -2,7 +2,16 @@ import * as preact from 'preact'
 import db from './db.coffee'
 import usePropState from './usePropState.coffee'
 
-export default Lecture = (props) ->
+export default Lectures = (props) ->
+  <>
+    {for lecture in props.lectures ? []
+      <Lecture {...lecture}/>
+    }
+    <h3>Add New Lecture:</h3>
+    <Lecture/>
+  </>
+
+export Lecture = (props) ->
   [number, setNumber] = usePropState props, 'number'
   [title, setTitle] = usePropState props, 'title'
   [description, setDescription] = usePropState props, 'description'
