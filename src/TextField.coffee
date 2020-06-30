@@ -1,4 +1,5 @@
 import * as preact from 'preact'
+import db from './db.coffee'
 import usePropState from './usePropState.coffee'
 
 export default TextField = (props) ->
@@ -7,7 +8,7 @@ export default TextField = (props) ->
     setValue e.target.value
   onSubmit = (e) =>
     e.preventDefault()
-    props.db "#{props.name}": value
+    db "#{props.name}": value
   <form onSubmit={onSubmit}>
     <label for={props.name}>
       {props.title}:

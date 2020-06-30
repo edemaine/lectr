@@ -1,4 +1,5 @@
 import * as preact from 'preact'
+import db from './db.coffee'
 import usePropState from './usePropState.coffee'
 
 export default Lecture = (props) ->
@@ -9,7 +10,7 @@ export default Lecture = (props) ->
   newLecture = not props._id?
   onSubmit = (e) =>
     e.preventDefault()
-    props.db 'lecture': {_id: props._id, number, title, description, video}
+    db 'lecture': {_id: props._id, number, title, description, video}
   submitName =
     if newLecture
       'Create'
