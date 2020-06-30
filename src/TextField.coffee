@@ -9,9 +9,9 @@ export default TextField = (props) ->
     e.preventDefault()
     props.db "#{props.name}": value
   <form onSubmit={onSubmit}>
-    <label>
-      {props.title}: &nbsp;
-      <input type="text" value={value} onInput={onInput}/>
+    <label for={props.name}>
+      {props.title}:
     </label>
+    <input id={props.name} type="text" value={value} onInput={onInput}/>
     <input type="submit" value="Save" disabled={value == props.value}/>
   </form>

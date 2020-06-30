@@ -18,23 +18,33 @@ export default Lecture = (props) ->
   disabled =
     (props.number == number and props.title == title and props.description == description and props.video == video)
   <form onSubmit={onSubmit}>
-    <label>
-      Number: &nbsp;
-      <input type="text" value={number} placeholder="07 or L07 etc."
-       onInput={(e) -> setNumber e.target.value}/>
-      <br/>
-      Title: &nbsp;
-      <input type="text" value={title} placeholder="Introduction to Everything"
-       onInput={(e) -> setTitle e.target.value}/>
-      <br/>
-      Description: &nbsp;
-      <input type="text" value={description} placeholder="In this lecture, ..."
-       onInput={(e) -> setDescription e.target.value}/>
-      <br/>
-      Video URL: &nbsp;
-      <input type="text" value={video} placeholder="https://www.youtube.com/watch?v=VqeF98GGiXQ"
-       onInput={(e) -> setVideo e.target.value}/>
+    <label for={"lecture-#{props._id}-number"}>
+      Number:
     </label>
+    <input id={"lecture-#{props._id}-number"}
+     type="text" value={number} placeholder="07 or L07 etc."
+     onInput={(e) -> setNumber e.target.value}/>
+    <br/>
+    <label for={"lecture-#{props._id}-title"}>
+      Title:
+    </label>
+    <input id={"lecture-#{props._id}-title"}
+     type="text" value={title} placeholder="Introduction to Everything"
+     onInput={(e) -> setTitle e.target.value}/>
+    <br/>
+    <label for={"lecture-#{props._id}-description"}>
+      Description:
+    </label>
+    <input id={"lecture-#{props._id}-description"}
+     type="text" value={description} placeholder="In this lecture, ..."
+     onInput={(e) -> setDescription e.target.value}/>
+    <br/>
+    <label for={"lecture-#{props._id}-video"}>
+      Video URL:
+    </label>
+    <input id={"lecture-#{props._id}-video"}
+     type="text" value={video} placeholder="https://www.youtube.com/watch?v=VqeF98GGiXQ"
+     onInput={(e) -> setVideo e.target.value}/>
     <br/>
     <input type="submit" value={submitName} disabled={disabled}/>
   </form>
