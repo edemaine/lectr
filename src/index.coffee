@@ -16,7 +16,7 @@ App = ->
     <TextField name="title" value={state.title} title="Course title"/>
     <DocumentTypes docTypes={state.docTypes}/>
     <h2>Lectures</h2>
-    <Lectures lectures={state.lectures}/>
+    <Lectures lectures={state.lectures} docTypes={state.docTypes}/>
     <details style="margin-top:2ex">
       <summary>Raw State</summary>
       <pre>{JSON.stringify state, null, 2}</pre>

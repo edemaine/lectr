@@ -5,7 +5,7 @@ import usePropState from './usePropState.coffee'
 export default Lectures = (props) ->
   <>
     {for lecture in props.lectures ? []
-      <Lecture {...lecture}/>
+      <Lecture {...lecture} docTypes={props.docTypes}/>
     }
     <h3>Add New Lecture:</h3>
     <Lecture/>
@@ -57,4 +57,16 @@ export Lecture = (props) ->
      onInput={(e) -> setVideo e.target.value}/>
     <br/>
     <input type="submit" value={submitName} disabled={disabled}/>
+    {for docType in props.docTypes ? []
+      <div className="docUpload">
+        <label for={"lecture-#{props._id}-doc-#{docType.fileName}"}>
+          {docType.displayName}
+        </label>
+        {if props.docs?[docType._id]
+          <pre>{props.docs[docType._id]}</pre>
+        }
+        <button>Upload</button>
+        <input type="file"/>
+      </div>
+    }
   </form>
