@@ -7,7 +7,7 @@ export default Lectures = (props) ->
     {for lecture in props.lectures ? []
       <Lecture {...lecture} docTypes={props.docTypes}/>
     }
-    <h3>Add New Lecture:</h3>
+    {### Add New Lecture: ###}
     <Lecture/>
   </>
 
@@ -27,7 +27,10 @@ export Lecture = (props) ->
       'Save'
   disabled =
     (props.number == number and props.title == title and props.description == description and props.video == video)
-  <form onSubmit={onSubmit}>
+  <form onSubmit={onSubmit} className="lecture">
+    {if newLecture
+      <h3>Add New Lecture:</h3>
+    }
     <label for={"lecture-#{props._id}-number"}>
       Number:
     </label>
