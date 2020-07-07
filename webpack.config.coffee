@@ -3,6 +3,8 @@ path = require 'path'
 module.exports =
   mode: 'development'
   entry: './src/index.coffee'
+  output:
+    path: outputDir = path.resolve __dirname, 'dist/staff'
   module:
     rules: [
       test: /\.coffee$/
@@ -32,7 +34,7 @@ module.exports =
       ]
     new (require 'webpack-permissions-plugin')
       buildFiles: [
-        path: path.resolve __dirname, 'dist/db.cgi'
+        path: "#{outputDir}/db.cgi"
         fileMode: 0o755
       ]
   ]
