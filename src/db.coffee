@@ -7,20 +7,17 @@ setState = null
 export onChange = (callback) ->
   setState = callback
 
-export default db = (op = {}) ->
+export default db = (op = {}, fileData) ->
+  body = JSON.stringify op
+  if fileData?
+    body = arrayBufferConcat(
+      (new TextEncoder).encode "#{JSON.stringify op}\f"
+    , fileData)
   response = await fetch cgiScript,
     method: 'POST'
-    body: JSON.stringify op
+    body: body
   data = await response.text()
   if response.ok
     setState JSON.parse data
   else
     console.error "Operation #{JSON.stringify op} failed on server: #{data}"
-
-export upload = (op, data) ->
-  encoder = new TextEncoder
-  response = await fetch cgiScript,
-    method: 'POST'
-    body: arrayBufferConcat(
-      encoder.encode "#{JSON.stringify op}\f"
-    , data)

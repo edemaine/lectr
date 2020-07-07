@@ -1,5 +1,5 @@
 import * as preact from 'preact'
-import db, {upload} from './db.coffee'
+import db from './db.coffee'
 import usePropState from './usePropState.coffee'
 
 export default Lectures = (props) ->
@@ -77,11 +77,12 @@ uploadDoc = (lecture, docType) -> (e) ->
   file = e.target?.files?[0]
   return unless file?
   buffer = await file.arrayBuffer()
-  upload
-    lecture: lecture
-    docType: docType
-    name: file.name
-    lastModified: file.lastModified
-    size: file.size
-    type: file.type
+  db
+    file:
+      lecture: lecture
+      docType: docType
+      name: file.name
+      lastModified: file.lastModified
+      size: file.size
+      type: file.type
   , buffer
