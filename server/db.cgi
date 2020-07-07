@@ -50,6 +50,7 @@ try:
       raw = json.dumps(data)
       backup = open(os.path.join(backupDir, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S-%f.json')), 'w')
       backup.write(raw)
+      backup.close()
       db.seek(0)
       db.truncate(0)
       db.write(raw)
