@@ -68,7 +68,7 @@ export Lecture = (props) ->
         {if props.docs?[docType._id]
           <pre>{props.docs[docType._id]}</pre>
         }
-        <input type="file" oninput={uploadDoc props._id, docType}/>
+        <input type="file" oninput={uploadDoc props._id, docType._id}/>
       </div>
     }
   </form>

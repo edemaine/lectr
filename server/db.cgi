@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import copy, datetime, json, os, sys, uuid
+import copy, datetime, json, os, sys, time, uuid
 import locking
 
 '''
@@ -29,7 +29,7 @@ try:
   fileData = None
   inputData = sys.stdin.read()
   if '\f' in inputData:
-    jsonData, fileData = inputData
+    jsonData, fileData = inputData.split('\f', 1)
   else:
     jsonData = inputData
   op = json.loads(jsonData)
@@ -55,9 +55,10 @@ try:
         data[plural] = []
       if kind in op:
         doc = op[kind]
+        doc['updated'] = time.time()
         if '_id' not in doc: # new
           doc['_id'] = uuid.uuid4().hex
-          doc['created'] = time.time()
+          doc['created'] = doc['updated']
           data[plural].append(doc)
         else:
           existing = [_ for _ in data[plural] if _['_id'] == doc['_id']][0]
@@ -70,9 +71,10 @@ try:
       data['files'] = {}
     if 'file' in op:
       doc = op['file']
+      doc['updated'] = time.time()
       if '_id' not in doc: # new
         doc['_id'] = uuid.uuid4().hex
-        doc['created'] = time.time()
+        doc['created'] = doc['updated']
         data['files'][doc['_id']] = doc
       else:
         existing = data['files'][doc['_id']]
