@@ -2,19 +2,37 @@
 import copy, datetime, json, os, sys, uuid
 import locking
 
+'''
+Lectr server-side CGI script: read and optionally modify the database
+
+The body of a request should have one of the following forms:
+  1. '{}' (null operation)
+  2. JSON-encoded object describing operation to perform
+  3. JSON-encoded object, followed by form-feed character, then a binary file
+
+In all cases, the response is a JSON dump of the entire database.
+'''
+
 dbDir = 'db'
 dbFile = 'course.json'
 backupDir = 'backup'
+filesDir = 'files'
 header = 'Content-type: application/json\n\n'
 
-for dirname in [dbDir, backupDir]:
+for dirname in [dbDir, backupDir, filesDir]:
   try:
     os.mkdir(dirname, 0o700)
   except Exception:
     pass
 
 try:
-  op = json.load(sys.stdin)
+  fileData = None
+  inputData = sys.stdin.read()
+  if '\f' in inputData:
+    jsonData, fileData = inputData
+  else:
+    jsonData = inputData
+  op = json.loads(jsonData)
   readOnly = not op
 
   db = locking.open_or_create_and_lock(os.path.join(dbDir, dbFile), readOnly)
@@ -39,12 +57,41 @@ try:
         doc = op[kind]
         if '_id' not in doc: # new
           doc['_id'] = uuid.uuid4().hex
+          doc['created'] = time.time()
           data[plural].append(doc)
         else:
           existing = [_ for _ in data[plural] if _['_id'] == doc['_id']][0]
           for key, value in doc.items():
             existing[key] = value
     data['lectures'].sort(key = lambda L: L.get('number'))
+
+    # File upload
+    if 'files' not in data:
+      data['files'] = {}
+    if 'file' in op:
+      doc = op['file']
+      if '_id' not in doc: # new
+        doc['_id'] = uuid.uuid4().hex
+        doc['created'] = time.time()
+        data['files'][doc['_id']] = doc
+      else:
+        existing = data['files'][doc['_id']]
+        if 'delete' in op:
+          os.remove(os.path.join(filesDir, doc['_id']))
+          del data['files'][doc['_id']]
+          fileData = None
+        else:
+          for key, value in doc.items():
+            existing[key] = value
+      if fileData is not None:
+        lockedFile = locking.open_or_create_and_lock(
+          os.path.join(filesDir, doc['_id']), False, binary = True)
+        lockedFile.seek(0)
+        lockedFile.truncate(0)
+        lockedFile.write(fileData)
+        lockedFile.flush()
+        locking.unlock(lockedFile)
+        lockedFile.close()
 
     if data != orig:
       raw = json.dumps(data)
@@ -54,6 +101,7 @@ try:
       db.seek(0)
       db.truncate(0)
       db.write(raw)
+      db.flush()
 
   locking.unlock(db)
   db.close()

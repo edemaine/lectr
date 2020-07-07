@@ -8,7 +8,9 @@
   },
   "author": "Erik Demaine",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "arraybuffer-concat": "0.0.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-react-jsx": "^7.9.4",

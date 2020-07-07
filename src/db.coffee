@@ -1,3 +1,5 @@
+import arrayBufferConcat from 'arraybuffer-concat'
+
 cgiScript = 'db.cgi'
 
 setState = null
@@ -14,3 +16,11 @@ export default db = (op = {}) ->
     setState JSON.parse data
   else
     console.error "Operation #{JSON.stringify op} failed on server: #{data}"
+
+export upload = (op, data) ->
+  encoder = new TextEncoder
+  response = await fetch cgiScript,
+    method: 'POST'
+    body: arrayBufferConcat(
+      encoder.encode "#{JSON.stringify op}\f"
+    , data)

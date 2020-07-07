@@ -1,5 +1,5 @@
 import * as preact from 'preact'
-import db from './db.coffee'
+import db, {upload} from './db.coffee'
 import usePropState from './usePropState.coffee'
 
 export default Lectures = (props) ->
@@ -27,7 +27,7 @@ export Lecture = (props) ->
       'Save'
   disabled =
     (props.number == number and props.title == title and props.description == description and props.video == video)
-  <form onSubmit={onSubmit} className="lecture">
+  <form onSubmit={onSubmit} className="lecture" data-id={props._id}>
     {if newLecture
       <h3>Add New Lecture:</h3>
     }
@@ -68,8 +68,20 @@ export Lecture = (props) ->
         {if props.docs?[docType._id]
           <pre>{props.docs[docType._id]}</pre>
         }
-        <button>Upload</button>
-        <input type="file"/>
+        <input type="file" oninput={uploadDoc props._id, docType}/>
       </div>
     }
   </form>
+
+uploadDoc = (lecture, docType) -> (e) ->
+  file = e.target?.files?[0]
+  return unless file?
+  buffer = await file.arrayBuffer()
+  upload
+    lecture: lecture
+    docType: docType
+    name: file.name
+    lastModified: file.lastModified
+    size: file.size
+    type: file.type
+  , buffer
