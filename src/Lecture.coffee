@@ -5,7 +5,7 @@ import usePropState from './usePropState.coffee'
 export default Lectures = (props) ->
   <>
     {for lecture in props.lectures ? []
-      <Lecture {...lecture} docTypes={props.docTypes}/>
+      <Lecture {...lecture} docTypes={props.docTypes} files={props.files}/>
     }
     {### Add New Lecture: ###}
     <Lecture/>
@@ -27,6 +27,12 @@ export Lecture = (props) ->
       'Save'
   disabled =
     (props.number == number and props.title == title and props.description == description and props.video == video)
+  filesFor = (docType) ->
+    files = (file for id, file of props.files \
+      when file.lecture == props._id and file.docType == docType._id)
+    files.sort (x, y) -> x.created - y.created
+    files.reverse()
+    files
   <form onSubmit={onSubmit} className="lecture" data-id={props._id}>
     {if newLecture
       <h3>Add New Lecture:</h3>
@@ -69,6 +75,13 @@ export Lecture = (props) ->
           <pre>{props.docs[docType._id]}</pre>
         }
         <input type="file" oninput={uploadDoc props._id, docType._id}/>
+        {if (files = filesFor docType).length
+          <ul>
+            {for file in files
+              <li><a href={"files/#{file._id}"} type={file.type}>{(new Date file.created).toISOString()} {file.name}</a></li>
+            }
+          </ul>
+        }
       </div>
     }
   </form>
