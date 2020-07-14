@@ -25,6 +25,9 @@ for dirname in [dbDir, backupDir, filesDir]:
   except Exception:
     pass
 
+def now():
+  return time.time() * 1000 # msec for JavaScript
+
 try:
   fileData = None
   inputData = sys.stdin.read()
@@ -55,7 +58,7 @@ try:
         data[plural] = []
       if kind in op:
         doc = op[kind]
-        doc['updated'] = time.time()
+        doc['updated'] = now()
         if '_id' not in doc: # new
           doc['_id'] = uuid.uuid4().hex
           doc['created'] = doc['updated']
@@ -71,7 +74,7 @@ try:
       data['files'] = {}
     if 'file' in op:
       doc = op['file']
-      doc['updated'] = time.time()
+      doc['updated'] = now()
       if '_id' not in doc: # new
         doc['_id'] = uuid.uuid4().hex
         doc['created'] = doc['updated']
