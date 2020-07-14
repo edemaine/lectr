@@ -19,6 +19,7 @@ backupDir = 'backup'
 filesDir = 'files'
 header = 'Content-type: application/json\n\n'
 
+os.chdir(os.path.dirname(__file__))
 for dirname in [dbDir, backupDir, filesDir]:
   try:
     os.mkdir(dirname, 0o700)

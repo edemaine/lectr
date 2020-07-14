@@ -4,7 +4,8 @@
   "description": "Synchronized Lecture Videos & Notes",
   "main": "index.js",
   "scripts": {
-    "prepare": "webpack"
+    "prepare": "webpack",
+    "start": "python testserver.py"
   },
   "author": "Erik Demaine",
   "license": "MIT",
